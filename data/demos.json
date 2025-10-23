@@ -1,0 +1,4 @@
+[
+  {"title":"Pose + Tracks (No Depth)","thumb":"assets/thumbs/clip_pose.jpg","video":"assets/videos/clip_pose.mp4","depth":false,"skeleton":false},
+  {"title":"Pose + Depth + Skeleton","thumb":"assets/thumbs/clip_depth.jpg","video":"assets/videos/clip_depth_skel.mp4","depth":true,"skeleton":true}
+]

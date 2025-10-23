@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Surgical AI Research - Kinematic analytics and depth-optional state-space reconstruction for minimally-invasive surgery.">
+  <meta name="keywords" content="Surgical AI, kinematics, tracking, pose estimation, depth, endoscopy">
+  <title>Columbia AIDL - Intraoperative Performance Analytics Lab - Surgical Kinematics & Analytics</title>
+
+  <!-- Fonts and CSS (nerfies-style stack) -->
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <!-- JS (nerfies-style stack) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <style>
+    /* Minor additions for badges & cards */
+    .badge { 
+      display: inline-block; 
+      font-size: 0.75rem; 
+      border-radius: 6px; 
+      padding: 2px 8px; 
+      margin-left: 6px; 
+      background: #eee; 
+    }
+    .badge.depth { background: #d1e7ff; }
+    .badge.skeleton { background: #e3ffd6; }
+    .demo-card { height: 100%; display: flex; flex-direction: column; }
+    .demo-thumb { width: 100%; border-radius: 8px; }
+    .demo-footer { margin-top: auto; }
+    .hero .publication-links .button { margin: 0.25rem; }
+    .legend .tag { margin-right: 0.5rem; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="#" style="font-weight:700;">Surgical AI Research</a>
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="#abstract">Abstract</a>
+      <a class="navbar-item" href="#demos">Demos</a>
+      <a class="navbar-item" href="#method">Method</a>
+      <a class="navbar-item" href="#results">Results</a>
+      <a class="navbar-item" href="#BibTeX">BibTeX</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Kinematics Reconstruction in Minimally-Invasive Surgery</h1>
+          <p class="subtitle is-5">Pose, tracking, and optional depth → kinematic trajectories & instrument state-space skeletons</p>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper (coming soon)</span>
+                </a>
+              </span>
+                <span class="link-block"></span>
+                <a href="https://youtu.be/qanpUD9zPFM" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-youtube"></i></span><span>Video</span>
+                </a>
+                </span>
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-github"></i></span><span>Code (coming soon)</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEASER -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/videos/hook_retractor.mp4" type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        Endoscopic video → instrument pose & tracks; depth and skeletons are one-click toggles.
+      </h2>
+    </div>
+  </div>
+</section>
+
+<!-- ABSTRACT -->
+<section class="section" id="abstract">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            We present a configurable pipeline for surgical instrument kinematic reconstruction from laparoscopic video.
+            Our system estimates multi-keypoint poses and persistent track IDs, exports a tidy track table for analysis,
+            and optionally augments to 3D state space with configurable depth inference. Tracked keypoints are optionally converted into a
+            normalized state-space to produce a compact skeleton trajectory representation suitable for applications such as robotic policy training & behavior analytics.
+          </p>
+          <p>
+            This site showcases demonstration clips, method diagrams, and utility analytics (e.g., trajectory clusters).
+            Depth is <b>optional</b> and currently in work; the state-space <b>skeleton export</b> is a toggle that
+            runs on top of generated instrument trajectories, with or without depth. The goal is a research-friendly toolchain that is fast to test,
+            transparent to tune, and easy to integrate into larger surgical autonomy stacks.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMOS (cards from data/demos.json) -->
+<section class="section" id="demos">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Demos</h2>
+        <p class="legend">
+          <span class="tag is-light">Legend:</span>
+          <span class="tag is-info">Depth</span>
+          <span class="tag is-success">Skeleton</span>
+        </p>
+        <div id="demo-grid" class="columns is-multiline"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METHOD -->
+<section class="section" id="method">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Method</h2>
+        <div class="content has-text-justified">
+          <p><b>Inputs:</b> Laparoscopic video (monocular or stereo).</p>
+          <p><b>Pose & Tracking Outputs:</b> instrument detector + multi-keypoint tracker yields per-frame keypoints and stable track IDs.</p>
+          <p><b>Optional Depth:</b> stereo depth (NVLabs FoundationStereo) or finetuned monocular depth (e.g., Metric3D/Depth-Anything).</p>
+          <p><b>Optional Segmentation Mask Constraint:</b> Applies a segmentation mask prompted by detection bounding boxes to constrain keypoint depth estimation to instrument masks. SAM2 Finetuning in progress.</p>
+          <p><b>State-Space Transform:</b> Converts tracked pose skeleton into a normalized
+             kinematic state-space (2D/3D), exported as JSON alongside the tidy track table.</p>
+          <p><b>Applications:</b> kinematic clips → windowed clustering, with exemplar frames and visual summaries.</p>
+        </div>  
+
+        <div class="columns is-variable is-6">
+          <div class="column">
+            <figure class="image is-16by9">
+              <img src="./static/images/pipeline.png" alt="Pipeline diagram: input video → pose/tracks → (depth) → state-space skeleton.">
+            </figure>
+            <p class="has-text-centered is-size-7">Fig. 1 - Pipeline overview.</p>
+          </div>
+          <div class="column">
+            <figure class="image is-16by9">
+              <img src="./static/images/analytics.png" alt="UMAP clustering of windowed kinematic features.">
+            </figure>
+            <p class="has-text-centered is-size-7">Fig. 2 - Demo Kinematic Analytics (trajectory clusters)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRAINING -->
+<section class="section" id="training">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+  <h2 class="title is-3">Training</h2>
+  <div class="content has-text-justified">
+    <p>
+      Our pipeline leverages fine-tuned Yolov11 models for pose estimation and Metric3D monocular depth prediction (NVLabs FoundationStereo can also be used for depth inference).
+      Our Yolov11 detection-pose models are trained on ~5k manually-annotated instruments across 25 SurgVU videos using data augmentations including random rotation, scaling, brightness/contrast jitter, and horizontal flipping.
+      Our Metric3D Monocular Depth model is fine-tuned on 25 Hamlyn stereoscopic videos with NVLabs FoundationStereo-generated annotation maps.
+      Below are training reports showing convergence and held-out validation metrics.
+    </p>
+  </div>
+  <div class="columns is-variable is-6">
+    <div class="column">
+      <figure class="image">
+        <img src="./static/images/pose_labels.png" alt="Pose annotation distributions.">
+      </figure>
+      <p class="has-text-centered is-size-7">Pose Model Classes: Six Instruments with varying annotation scales</p>
+    </div>
+    <div class="column">
+      <figure class="image">
+        <img src="./static/images/pose_results.png" alt="Depth training curves: loss and depth error metrics over epochs.">
+      </figure>
+      <p class="has-text-centered is-size-7">Pose Model Training Report: YoloV11-small</p>
+    </div>
+  </div>
+
+  <div class="columns is-variable is-6">
+    <div class="column">
+      <figure class="image">
+        <img src="./static/images/m3d_train.png" alt="Pose training curves: loss and keypoint accuracy over epochs.">
+      </figure>
+      <p class="has-text-centered is-size-7">Pose Model Training Report</p>
+    </div>
+    <div class="column">
+      <figure class="image">
+        <img src="./static/images/depth_result.png" alt="Depth Comparisons: NVLabs FoundationsStereo & Fine-Tuned Metric3D Inference.">
+      </figure>
+      <p class="has-text-centered is-size-7">Depth Model Training Report</p>
+    </div>
+  </div>
+
+</section>
+
+<!-- RESULTS (carousel) -->
+<section class="hero is-light is-small" id="results">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+  <div class="item">
+    <video autoplay controls muted loop playsinline height="100%">
+      <source src="./static/videos/pose_only.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="item">
+    <video autoplay controls muted loop playsinline height="100%">
+      <source src="./static/videos/pose_depth.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="item">
+    <video autoplay controls muted loop playsinline height="100%">
+      <source src="./static/videos/pose_depth_skeleton.mp4" type="video/mp4">
+    </video>
+  </div>
+</section>
+
+<!-- BIBTEX -->
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+<pre><code>@article{surgai_kinematics_2025,
+  author    = {McHugh, Liam and Chen, Xudong and Turkan, Mehmet K. and Ballo, Mattia and Aditya Amit Godbole and Morais, Maria and Kostic, Zoran and Filicori, Filippo},
+  title     = {Kinematic Analytics for Minimally-Invasive Surgery: Depth-Optional State-Space Reconstruction},
+  journal   = {preprint},
+  year      = {2025},
+}</code></pre>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link" href="#" title="Paper">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="#" title="Code">
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is adapted from the nerfies project page structure. 
+          </p>
+          <p>
+            © 2025 Surgical AI Research through Columbia AIDL & IPAL. Content under CC BY-NC 4.0; code under MIT/Apache-2.0 where noted.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Inline script to render demo cards from data/demos.json -->
+<script>
+(async function() {
+  try {
+    const res = await fetch('./data/demos.json');
+    const demos = await res.json();
+    const grid = document.getElementById('demo-grid');
+    if (!Array.isArray(demos)) return;
+
+    demos.forEach(d => {
+      const col = document.createElement('div');
+      col.className = 'column is-one-third';
+
+      const card = document.createElement('div');
+      card.className = 'card demo-card';
+
+      // Thumb
+      if (d.thumb) {
+        const figure = document.createElement('div');
+        figure.className = 'card-image';
+        const imgWrap = document.createElement('figure');
+        imgWrap.className = 'image';
+        const img = document.createElement('img');
+        img.src = d.thumb;
+        img.alt = d.title || 'demo';
+        img.className = 'demo-thumb';
+        imgWrap.appendChild(img);
+        figure.appendChild(imgWrap);
+        card.appendChild(figure);
+      }
+
+      // Content
+      const content = document.createElement('div');
+      content.className = 'card-content';
+      const media = document.createElement('div');
+      media.className = 'media';
+      const mediaContent = document.createElement('div');
+      mediaContent.className = 'media-content';
+      const title = document.createElement('p');
+      title.className = 'title is-5';
+      title.textContent = d.title || 'Demo';
+
+      // badges
+      const badges = document.createElement('p');
+      if (d.depth) {
+        const b = document.createElement('span');
+        b.className = 'badge depth';
+        b.textContent = 'Depth';
+        badges.appendChild(b);
+      }
+      if (d.skeleton) {
+        const b = document.createElement('span');
+        b.className = 'badge skeleton';
+        b.textContent = 'Skeleton';
+        badges.appendChild(b);
+      }
+      mediaContent.appendChild(title);
+      mediaContent.appendChild(badges);
+      media.appendChild(mediaContent);
+      content.appendChild(media);
+
+      // description
+      if (d.text) {
+        const p = document.createElement('p');
+        p.className = 'content is-size-7';
+        p.textContent = d.text;
+        content.appendChild(p);
+      }
+      card.appendChild(content);
+
+      // footer with play button
+      const footer = document.createElement('footer');
+      footer.className = 'card-footer demo-footer';
+      if (d.video) {
+        const a = document.createElement('a');
+        a.className = 'card-footer-item';
+        a.textContent = 'Play';
+        a.href = d.video;
+        a.setAttribute('target', '_blank');
+        footer.appendChild(a);
+      }
+      if (d.repo) {
+        const a = document.createElement('a');
+        a.className = 'card-footer-item';
+        a.textContent = 'Code';
+        a.href = d.repo;
+        a.setAttribute('target', '_blank');
+        footer.appendChild(a);
+      }
+      card.appendChild(footer);
+
+      col.appendChild(card);
+      grid.appendChild(col);
+    });
+  } catch (e) {
+    console.warn('Failed to load demos.json', e);
+  }
+})();
+</script>
+
+</body>
+</html>
